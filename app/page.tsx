@@ -302,37 +302,7 @@ function Hero() {
         }}
       />
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.5 }}
-        style={{
-          position: "absolute",
-          bottom: "2.5rem",
-          right: "clamp(1.5rem, 6vw, 5rem)",
-          transform: "translateY(50%)",
-          display: "flex",
-          alignItems: "center",
-          gap: "0.75rem",
-          fontFamily: "var(--font-body)",
-          fontSize: "0.7rem",
-          letterSpacing: "0.2em",
-          textTransform: "uppercase",
-          color: "var(--color-warm-gray)",
-        }}
-      >
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          style={{
-            width: "1px",
-            height: "2rem",
-            backgroundColor: "var(--color-gold)",
-          }}
-        />
-        Scroll
-      </motion.div>
+
     </section>
   );
 }
@@ -506,6 +476,7 @@ function WhatThisSpaceHolds() {
 function AboutFounder() {
   return (
     <section
+      id="christeena"
       style={{
         backgroundColor: "var(--color-cream)",
         padding: "var(--section-pad) clamp(1.5rem, 6vw, 5rem)",
