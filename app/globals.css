@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* ─── Brand Tokens ─── */
+:root {
+  /* Colors */
+  --color-cream: #F5F0E8;
+  --color-cream-light: #FAF7F2;
+  --color-cream-dark: #EDE5D5;
+  --color-obsidian: #0E0D0B;
+  --color-charcoal: #2A2825;
+  --color-warm-gray: #7C7870;
+  --color-gold: #B8975A;
+  --color-gold-light: #D4B078;
+  --color-gold-muted: #8A6E42;
+  --color-sand: #C4B49A;
+  --color-blush: #D9C9B8;
+
+  /* Typography */
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-body: 'Jost', 'DM Sans', 'Gill Sans', system-ui, sans-serif;
+  --font-accent: 'Cormorant', Georgia, serif;
+
+  /* Spacing */
+  --section-pad: clamp(5rem, 12vw, 10rem);
+  --content-max: 1200px;
+}
+
+/* ─── Base Reset ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-cream-light);
+  color: var(--color-obsidian);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ─── Typography Scale ─── */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+}
+
+/* ─── Selection ─── */
+::selection {
+  background: var(--color-gold-light);
+  color: var(--color-obsidian);
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream-light);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-sand);
+  border-radius: 2px;
+}
+
+/* ─── Custom Utilities ─── */
+.text-display {
+  font-family: var(--font-display);
+}
+
+.text-body {
+  font-family: var(--font-body);
+}
+
+.text-accent {
+  font-family: var(--font-accent);
+  font-style: italic;
+}
+
+/* ─── CHRÉA Brand Accent ─── */
+.chrea-accent {
+  color: var(--color-gold);
+}
+
+/* ─── Grain overlay ─── */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* ─── Divider ─── */
+.divider-gold {
+  width: 3rem;
+  height: 1px;
+  background: var(--color-gold);
+  display: block;
+}
