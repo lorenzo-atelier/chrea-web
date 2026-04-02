@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { sendWelcomeEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,47 +23,16 @@ export async function POST(req: NextRequest) {
 
     const normalizedEmail = email.trim().toLowerCase();
 
-    // ── Database: upsert subscriber ────────────────────────────────────────────
-    let isNewSubscriber = true;
-
-    try {
-      const existing = await prisma.user.findUnique({
-        where: { email: normalizedEmail },
-      });
-
-      if (existing) {
-        isNewSubscriber = false;
-        console.log(`[subscribe] Already subscribed: ${normalizedEmail}`);
-      } else {
-        await prisma.user.create({
-          data: {
-            email: normalizedEmail,
-            role: "subscriber",
-          },
-        });
-        console.log(`[subscribe] New subscriber saved: ${normalizedEmail}`);
-      }
-    } catch (dbError) {
-      // If DB isn't configured yet, log and continue (graceful degradation)
-      console.error("[subscribe] DB error (non-fatal):", dbError);
-      // Still send welcome email if it's a new subscription attempt
-    }
-
-    // ── Email: send welcome (only for new subscribers) ─────────────────────────
-    if (isNewSubscriber) {
-      const emailResult = await sendWelcomeEmail(normalizedEmail);
-      if (!emailResult.success) {
-        console.warn("[subscribe] Welcome email failed:", emailResult.error);
-        // Non-fatal — subscriber is saved, email failed
-      }
-    }
+    // ── Stub: DB + email not configured yet ────────────────────────────────────
+    // TODO: Re-enable Prisma + Resend once env vars are set on Vercel
+    // import { prisma } from "@/lib/prisma";
+    // import { sendWelcomeEmail } from "@/lib/email";
+    console.log(`[subscribe] New signup: ${normalizedEmail} (DB not configured yet)`);
 
     return NextResponse.json(
       {
         success: true,
-        message: isNewSubscriber
-          ? "Bienvenida al flock."
-          : "Ya eres parte del flock.",
+        message: "Bienvenida al flock.",
       },
       { status: 200 }
     );

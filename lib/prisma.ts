@@ -1,8 +1,8 @@
-import { PrismaClient } from "../generated/prisma";
+import { PrismaClient } from "../generated/prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
+  prisma: InstanceType<typeof PrismaClient> | undefined;
 };
 
 function createPrismaClient() {
@@ -11,7 +11,7 @@ function createPrismaClient() {
     console.warn("[prisma] DATABASE_URL not configured — DB operations will fail");
   }
   const adapter = new PrismaNeon({ connectionString: connectionString ?? "" });
-  return new PrismaClient({ adapter } as ConstructorParameters<typeof PrismaClient>[0]);
+  return new PrismaClient({ adapter });
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
