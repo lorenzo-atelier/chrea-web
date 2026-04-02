@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useTransform, useAnimate } from "framer-motion";
+import { useRef, useEffect } from "react";
 
 interface BirdMotifProps {
   variant?: "flying" | "sitting";
@@ -9,12 +9,6 @@ interface BirdMotifProps {
   color?: string;
   className?: string;
 }
-
-// Minimalist bird SVG paths
-const FLYING_BIRD_PATH =
-  "M0 10 C5 2, 15 0, 20 5 C25 0, 35 -2, 40 5 C30 8, 20 12, 0 10Z";
-const SITTING_BIRD_PATH =
-  "M10 0 C12 -4, 18 -4, 20 0 L22 6 C18 4, 12 4, 10 6 L8 4 C6 8, 6 12, 10 14 C8 14, 2 12, 2 6Z";
 
 export function BirdMotif({
   variant = "flying",
@@ -71,47 +65,161 @@ export function BirdMotif({
   );
 }
 
-// The animated É → Bird transformation concept
-export function LogoBird({ className = "" }: { className?: string }) {
+// ─── Logo Bird Animation ────────────────────────────────────────────────────────
+// Per brand PDF: "la animación convierte la tilde en la E del logo, en la cola
+// del pájaro, para así después formar la figura entera y volar"
+// Sequence: CHRÉA text → tilde morphs into bird tail → full bird forms → flies away → É restored
+export function LogoBirdAnimation({ className = "" }: { className?: string }) {
+  const [scope, animate] = useAnimate();
+
+  useEffect(() => {
+    const seq = async () => {
+      // Step 0: Start — show CHRÉA with normal É accent (opacity 1)
+      // Small pause before starting
+      await new Promise((r) => setTimeout(r, 600));
+
+      // Step 1: The tilde accent starts to stretch & glow (0.4s)
+      await animate(
+        "#tilde-stroke",
+        { scaleX: 1.4, scaleY: 0.7, opacity: [0.7, 1], fill: "var(--color-gold)" },
+        { duration: 0.4, ease: "easeInOut" }
+      );
+
+      // Step 2: Tilde morphs into tail shape — the É starts fading (0.5s)
+      await animate(
+        "#tilde-stroke",
+        { scaleX: 1.8, scaleY: 0.5 },
+        { duration: 0.5, ease: [0.76, 0, 0.24, 1] }
+      );
+
+      // Step 3: Bird body fades in around the tail (0.6s)
+      await animate(
+        "#bird-body",
+        { opacity: 1, scale: 1 },
+        { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
+      );
+
+      // Step 4: É letter fades back slightly (bird is "detaching") (0.4s)
+      await animate(
+        "#e-accent",
+        { opacity: 0.3 },
+        { duration: 0.4, ease: "easeIn" }
+      );
+
+      // Step 5: Bird flies away — up-right arc (0.9s)
+      await animate(
+        "#bird-body",
+        {
+          x: [0, 30, 80],
+          y: [0, -20, -60],
+          opacity: [1, 1, 0],
+          scale: [1, 0.85, 0.6],
+        },
+        { duration: 0.9, ease: [0.45, 0, 0.55, 1] }
+      );
+
+      // Step 6: É accent tilde restores (0.35s)
+      await animate(
+        "#e-accent",
+        { opacity: 1 },
+        { duration: 0.35, ease: "easeOut" }
+      );
+      await animate(
+        "#tilde-stroke",
+        { scaleX: 1, scaleY: 1, opacity: 0 },
+        { duration: 0.3, ease: "easeOut" }
+      );
+    };
+
+    seq();
+  }, [animate]);
+
   return (
-    <motion.div
-      className={`relative inline-block ${className}`}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+    <div
+      ref={scope}
+      className={className}
+      style={{
+        position: "relative",
+        display: "inline-block",
+        lineHeight: 1,
+      }}
     >
-      {/* Tilde accent that animates into bird tail */}
-      <motion.svg
-        width="60"
-        height="20"
-        viewBox="0 0 60 20"
-        fill="none"
-        className="absolute -top-3 left-1/2 -translate-x-1/2"
-        initial={{ scaleX: 0, opacity: 0 }}
-        animate={{ scaleX: 1, opacity: 1 }}
-        transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+      {/* The main CHRÉA text */}
+      <span
+        id="e-accent"
+        style={{
+          fontFamily: "var(--font-display)",
+          fontSize: "clamp(3rem, 7.5vw, 8rem)",
+          fontWeight: 300,
+          letterSpacing: "-0.02em",
+          color: "var(--color-obsidian)",
+          lineHeight: 1.05,
+          display: "inline-block",
+          position: "relative",
+        }}
       >
-        <motion.path
-          d="M10 10 C18 4, 22 4, 30 8 C38 12, 42 12, 50 6"
+        CHRÉA
+      </span>
+
+      {/* Animated tilde overlay — sits over the É */}
+      <motion.svg
+        id="tilde-stroke"
+        width="24"
+        height="12"
+        viewBox="0 0 24 12"
+        fill="none"
+        initial={{ opacity: 0.7, scaleX: 1, scaleY: 1 }}
+        style={{
+          position: "absolute",
+          /* Approximate position of accent over É in CHRÉA — 4th of 5 chars = ~68% from left */
+          left: "calc(68% - 12px)",
+          top: "-4px",
+          transformOrigin: "center",
+          pointerEvents: "none",
+          overflow: "visible",
+        }}
+      >
+        {/* Tilde / accent shape */}
+        <path
+          d="M2 8 C5 4, 8 4, 12 6 C16 8, 19 8, 22 4"
           stroke="var(--color-gold)"
-          strokeWidth="1.5"
+          strokeWidth="1.8"
           strokeLinecap="round"
           fill="none"
-          animate={{
-            d: [
-              "M10 10 C18 4, 22 4, 30 8 C38 12, 42 12, 50 6",
-              "M5 8 C15 2, 25 0, 35 5 C42 8, 48 4, 55 6",
-            ],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            repeatType: "reverse",
-            ease: "easeInOut",
-          }}
         />
       </motion.svg>
-    </motion.div>
+
+      {/* Bird silhouette — starts at É position, flies away */}
+      <motion.svg
+        id="bird-body"
+        width="48"
+        height="24"
+        viewBox="0 0 48 24"
+        fill="none"
+        initial={{ opacity: 0, scale: 0.6 }}
+        style={{
+          position: "absolute",
+          left: "calc(68% - 24px)",
+          top: "-14px",
+          transformOrigin: "center",
+          pointerEvents: "none",
+          overflow: "visible",
+        }}
+      >
+        {/* Full bird silhouette — wings + body */}
+        <path
+          d="M2 12 C8 4, 16 2, 24 8 C32 2, 40 4, 46 12 C36 10, 28 11, 24 14 C20 11, 12 10, 2 12Z"
+          fill="var(--color-gold)"
+          opacity={0.9}
+        />
+        {/* Tail detail */}
+        <path
+          d="M18 13 C15 15, 13 18, 15 20 C17 18, 19 16, 21 17Z"
+          fill="var(--color-gold)"
+          opacity={0.75}
+        />
+      </motion.svg>
+    </div>
   );
 }
 
@@ -134,6 +242,32 @@ export function ParallaxBird({ className = "" }: { className?: string }) {
       className={`absolute pointer-events-none ${className}`}
     >
       <BirdMotif variant="flying" size={56} color="var(--color-gold)" />
+    </motion.div>
+  );
+}
+
+// Small atmospheric bird for hero scatter
+export function AtmosphericBird({
+  size = 24,
+  opacity = 0.08,
+  delay = 0,
+  color = "var(--color-obsidian)",
+  style = {},
+}: {
+  size?: number;
+  opacity?: number;
+  delay?: number;
+  color?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <motion.div
+      style={{ position: "absolute", opacity, ...style }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity }}
+      transition={{ duration: 1.5, delay }}
+    >
+      <BirdMotif variant="flying" size={size} color={color} />
     </motion.div>
   );
 }

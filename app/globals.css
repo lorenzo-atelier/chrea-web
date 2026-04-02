@@ -2,13 +2,15 @@
 
 /* ─── Brand Tokens ─── */
 :root {
-  /* Colors */
+  /* Colors — earthy organic palette from brand PDF */
   --color-cream: #F5F0E8;
   --color-cream-light: #FAF7F2;
   --color-cream-dark: #EDE5D5;
-  --color-obsidian: #0E0D0B;
-  --color-charcoal: #2A2825;
+  --color-obsidian: #2C3227;        /* dark olive/charcoal green (was near-black) */
+  --color-charcoal: #3D4035;        /* warm dark green-gray */
   --color-warm-gray: #7C7870;
+  --color-taupe: #8B7D6B;           /* warm taupe from PDF palette */
+  --color-warm-brown: #6B5B4E;      /* warm brown from PDF palette */
   --color-gold: #B8975A;
   --color-gold-light: #D4B078;
   --color-gold-muted: #8A6E42;
@@ -111,4 +113,29 @@ h1, h2, h3, h4 {
   height: 1px;
   background: var(--color-gold);
   display: block;
+}
+
+/* ─── Editorial Two-Column Grid (Desktop Only) ─── */
+/* PDF page 10: Left = content sections, Right = About the Founder */
+@media (min-width: 1024px) {
+  .editorial-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+  .editorial-left {
+    display: flex;
+    flex-direction: column;
+  }
+  .editorial-right {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .editorial-right::-webkit-scrollbar {
+    display: none;
+  }
 }

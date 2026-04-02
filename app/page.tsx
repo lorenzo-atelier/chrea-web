@@ -1,21 +1,29 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   AnimatedSection,
   StaggerContainer,
   StaggerItem,
 } from "@/components/ui/AnimatedSection";
-import { BirdMotif, ParallaxBird } from "@/components/ui/BirdMotif";
+import {
+  BirdMotif,
+  ParallaxBird,
+  LogoBirdAnimation,
+  AtmosphericBird,
+} from "@/components/ui/BirdMotif";
 
 // ─── Hero Section ──────────────────────────────────────────────────────────────
 function Hero() {
   return (
     <section
+      className="grain"
       style={{
         minHeight: "100svh",
-        backgroundColor: "var(--color-cream-light)",
+        // Coastal gradient: cream top → soft blue-gray-green bottom
+        background:
+          "linear-gradient(175deg, var(--color-cream-light) 0%, #EEE9DF 30%, #D8DDD4 60%, #C8D1CA 85%, #B8C4BC 100%)",
         position: "relative",
         display: "flex",
         flexDirection: "column",
@@ -24,6 +32,58 @@ function Hero() {
         overflow: "hidden",
       }}
     >
+      {/* ── Atmospheric scattered birds ── */}
+      {/* Behind text, varying opacities, parallax feel */}
+      <AtmosphericBird
+        size={18}
+        opacity={0.07}
+        delay={1.2}
+        color="var(--color-charcoal)"
+        style={{ top: "15%", left: "8%" }}
+      />
+      <AtmosphericBird
+        size={28}
+        opacity={0.05}
+        delay={1.8}
+        color="var(--color-charcoal)"
+        style={{ top: "20%", left: "35%" }}
+      />
+      <AtmosphericBird
+        size={22}
+        opacity={0.09}
+        delay={2.1}
+        color="var(--color-warm-brown)"
+        style={{ top: "35%", right: "12%" }}
+      />
+      <AtmosphericBird
+        size={14}
+        opacity={0.06}
+        delay={1.6}
+        color="var(--color-charcoal)"
+        style={{ top: "55%", left: "22%" }}
+      />
+      <AtmosphericBird
+        size={32}
+        opacity={0.05}
+        delay={2.4}
+        color="var(--color-obsidian)"
+        style={{ top: "62%", right: "28%" }}
+      />
+      <AtmosphericBird
+        size={16}
+        opacity={0.08}
+        delay={1.9}
+        color="var(--color-warm-brown)"
+        style={{ top: "78%", left: "55%" }}
+      />
+      <AtmosphericBird
+        size={20}
+        opacity={0.06}
+        delay={2.6}
+        color="var(--color-charcoal)"
+        style={{ top: "10%", right: "40%" }}
+      />
+
       {/* Decorative top line */}
       <motion.div
         initial={{ scaleX: 0, opacity: 0 }}
@@ -74,7 +134,7 @@ function Hero() {
       {/* Second bird — lower left, small */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 0.35, x: 0 }}
+        animate={{ opacity: 0.25, x: 0 }}
         transition={{ duration: 2, delay: 1.5 }}
         style={{
           position: "absolute",
@@ -82,11 +142,21 @@ function Hero() {
           left: "clamp(1.5rem, 6vw, 5rem)",
         }}
       >
-        <BirdMotif variant="flying" size={28} color="var(--color-sand)" />
+        <BirdMotif variant="flying" size={28} color="var(--color-warm-brown)" />
       </motion.div>
 
       {/* Content */}
-      <div style={{ maxWidth: "var(--content-max)", margin: "0 auto", width: "100%" }}>
+      <div style={{ maxWidth: "var(--content-max)", margin: "0 auto", width: "100%", position: "relative", zIndex: 2 }}>
+        {/* Logo Bird Animation — brand signature */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.2 }}
+          style={{ marginBottom: "clamp(1rem, 2vw, 1.5rem)" }}
+        >
+          <LogoBirdAnimation />
+        </motion.div>
+
         {/* Eyebrow */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -111,7 +181,7 @@ function Hero() {
           transition={{ duration: 1.1, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
           style={{
             fontFamily: "var(--font-display)",
-            fontSize: "clamp(3rem, 7.5vw, 8rem)",
+            fontSize: "clamp(2.5rem, 6vw, 6.5rem)",
             fontWeight: 300,
             lineHeight: 1.05,
             letterSpacing: "-0.02em",
@@ -147,36 +217,48 @@ function Hero() {
           que se sienta tuya.
         </motion.p>
 
-        {/* CTAs */}
+        {/* CTAs — flying birds near CTAs (action moments) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.85 }}
           style={{ display: "flex", gap: "2rem", flexWrap: "wrap", alignItems: "center" }}
         >
-          <a
-            href="#join"
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(0.8rem, 1.2vw, 0.9rem)",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "var(--color-cream-light)",
-              backgroundColor: "var(--color-obsidian)",
-              padding: "0.875rem 2.25rem",
-              textDecoration: "none",
-              transition: "background-color 0.3s ease, color 0.3s ease",
-              display: "inline-block",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "var(--color-gold)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "var(--color-obsidian)";
-            }}
-          >
-            → Join the flock.
-          </a>
+          <div style={{ position: "relative", display: "inline-block" }}>
+            <a
+              href="#join"
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "clamp(0.8rem, 1.2vw, 0.9rem)",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "var(--color-cream-light)",
+                backgroundColor: "var(--color-obsidian)",
+                padding: "0.875rem 2.25rem",
+                textDecoration: "none",
+                transition: "background-color 0.3s ease, color 0.3s ease",
+                display: "inline-block",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "var(--color-gold)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "var(--color-obsidian)";
+              }}
+            >
+              → Join the flock.
+            </a>
+            {/* Flying bird accent near CTA */}
+            <motion.div
+              initial={{ opacity: 0, x: 5 }}
+              animate={{ opacity: 0.2, x: 0 }}
+              transition={{ delay: 1.2, duration: 1 }}
+              style={{ position: "absolute", top: "-18px", right: "-12px" }}
+            >
+              <BirdMotif variant="flying" size={18} color="var(--color-gold)" />
+            </motion.div>
+          </div>
+
           <a
             href="#espacio"
             style={{
@@ -278,7 +360,7 @@ function WhatThisSpaceHolds() {
           fontSize: "clamp(6rem, 15vw, 18rem)",
           fontWeight: 300,
           color: "transparent",
-          WebkitTextStroke: "1px rgba(184, 151, 90, 0.08)",
+          WebkitTextStroke: "1px rgba(212, 176, 120, 0.07)",
           whiteSpace: "nowrap",
           pointerEvents: "none",
           letterSpacing: "-0.05em",
@@ -290,7 +372,7 @@ function WhatThisSpaceHolds() {
       </div>
 
       <div style={{ maxWidth: "var(--content-max)", margin: "0 auto" }}>
-        {/* Section label */}
+        {/* Section label — English per PDF */}
         <AnimatedSection delay={0}>
           <p
             style={{
@@ -302,7 +384,7 @@ function WhatThisSpaceHolds() {
               marginBottom: "clamp(3rem, 6vw, 5rem)",
             }}
           >
-            El espacio
+            WHAT THIS SPACE HOLDS
           </p>
         </AnimatedSection>
 
@@ -334,7 +416,7 @@ function WhatThisSpaceHolds() {
                 fontSize: "clamp(1.25rem, 2.5vw, 2.25rem)",
                 fontWeight: 300,
                 lineHeight: 1.35,
-                color: "var(--color-blush)",
+                color: "var(--color-cream-light)",
                 marginBottom: "clamp(1.25rem, 2.5vw, 2rem)",
                 maxWidth: "30ch",
                 fontStyle: "italic",
@@ -372,7 +454,7 @@ function WhatThisSpaceHolds() {
               margin: "clamp(4rem, 8vw, 7rem) 0",
             }}
           >
-            <div className="divider-gold" style={{ width: "3rem", height: "1px", backgroundColor: "var(--color-gold)" }} />
+            <div style={{ width: "3rem", height: "1px", backgroundColor: "var(--color-gold)" }} />
             <BirdMotif variant="flying" size={36} color="var(--color-gold)" className="" />
             <div style={{ width: "3rem", height: "1px", backgroundColor: "var(--color-gold)" }} />
           </div>
@@ -396,7 +478,7 @@ function WhatThisSpaceHolds() {
                     fontSize: "clamp(1.5rem, 3vw, 2.5rem)",
                     fontWeight: 400,
                     fontStyle: "italic",
-                    color: i === 2 ? "var(--color-gold)" : "var(--color-cream)",
+                    color: i === 2 ? "var(--color-gold-light)" : "var(--color-cream)",
                     letterSpacing: "-0.01em",
                     marginBottom: "0.75rem",
                   }}
@@ -431,13 +513,13 @@ function AboutFounder() {
         overflow: "hidden",
       }}
     >
-      {/* Background bird */}
+      {/* Background bird — large, very subtle */}
       <div
         style={{
           position: "absolute",
           top: "clamp(4rem, 8vw, 7rem)",
           right: "clamp(1.5rem, 6vw, 5rem)",
-          opacity: 0.06,
+          opacity: 0.05,
         }}
         aria-hidden="true"
       >
@@ -445,7 +527,7 @@ function AboutFounder() {
       </div>
 
       <div style={{ maxWidth: "var(--content-max)", margin: "0 auto" }}>
-        {/* Section label */}
+        {/* Section label — English per PDF */}
         <AnimatedSection delay={0}>
           <p
             style={{
@@ -457,7 +539,7 @@ function AboutFounder() {
               marginBottom: "clamp(3rem, 6vw, 5rem)",
             }}
           >
-            La fundadora
+            ABOUT THE FOUNDER
           </p>
         </AnimatedSection>
 
@@ -539,7 +621,7 @@ function AboutFounder() {
               </div>
             </AnimatedSection>
 
-            {/* Signature divider */}
+            {/* Signature divider — sitting bird for introspection */}
             <AnimatedSection delay={0.35} direction="fade">
               <div
                 style={{
@@ -556,6 +638,11 @@ function AboutFounder() {
                     backgroundColor: "var(--color-gold)",
                   }}
                 />
+                <BirdMotif
+                  variant="sitting"
+                  size={24}
+                  color="var(--color-gold-muted)"
+                />
                 <p
                   style={{
                     fontFamily: "var(--font-display)",
@@ -571,7 +658,7 @@ function AboutFounder() {
             </AnimatedSection>
           </div>
 
-          {/* Image placeholder */}
+          {/* Image placeholder — sitting bird (introspection) */}
           <AnimatedSection delay={0.25} direction="right">
             <div
               style={{
@@ -603,9 +690,10 @@ function AboutFounder() {
                   gap: "1rem",
                 }}
               >
+                {/* Sitting bird — "pause. come back to yourself" */}
                 <BirdMotif
                   variant="sitting"
-                  size={48}
+                  size={52}
                   color="var(--color-gold-muted)"
                 />
                 <p
@@ -683,7 +771,7 @@ function JoinTheFlock() {
           fontSize: "clamp(10rem, 25vw, 30rem)",
           fontWeight: 300,
           color: "transparent",
-          WebkitTextStroke: "1px rgba(184, 151, 90, 0.05)",
+          WebkitTextStroke: "1px rgba(212, 176, 120, 0.05)",
           lineHeight: 1,
           pointerEvents: "none",
           userSelect: "none",
@@ -692,6 +780,34 @@ function JoinTheFlock() {
       >
         ∞
       </div>
+
+      {/* Flying bird near CTA — action/momentum */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.15 }}
+        transition={{ duration: 1.5, delay: 0.5 }}
+        style={{
+          position: "absolute",
+          top: "20%",
+          right: "15%",
+        }}
+        aria-hidden="true"
+      >
+        <BirdMotif variant="flying" size={44} color="var(--color-gold)" />
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.1 }}
+        transition={{ duration: 1.5, delay: 1 }}
+        style={{
+          position: "absolute",
+          top: "15%",
+          right: "25%",
+        }}
+        aria-hidden="true"
+      >
+        <BirdMotif variant="flying" size={26} color="var(--color-gold-light)" />
+      </motion.div>
 
       <div
         style={{
@@ -720,6 +836,7 @@ function JoinTheFlock() {
                 backgroundColor: "var(--color-gold-muted)",
               }}
             />
+            {/* Flying bird — "move. trust yourself. go" */}
             <BirdMotif variant="flying" size={28} color="var(--color-gold)" />
             <div
               style={{
@@ -758,7 +875,7 @@ function JoinTheFlock() {
                 fontSize: "clamp(1.1rem, 2vw, 1.75rem)",
                 fontWeight: 300,
                 fontStyle: "italic",
-                color: "var(--color-blush)",
+                color: "var(--color-cream-light)",
                 lineHeight: 1.5,
                 marginBottom: "0.75rem",
               }}
@@ -786,7 +903,7 @@ function JoinTheFlock() {
           </StaggerItem>
         </StaggerContainer>
 
-        {/* Email Form */}
+        {/* Email Form — flying bird near form for action */}
         <AnimatedSection delay={0.4} direction="up">
           {status === "success" ? (
             <div
@@ -808,85 +925,97 @@ function JoinTheFlock() {
               </p>
             </div>
           ) : (
-            <form
-              onSubmit={handleSubmit}
-              style={{
-                display: "flex",
-                gap: "0",
-                maxWidth: "480px",
-                margin: "0 auto",
-                flexWrap: "wrap",
-              }}
-            >
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Tu correo"
-                required
+            <div style={{ position: "relative", display: "inline-block" }}>
+              <form
+                onSubmit={handleSubmit}
                 style={{
-                  flex: "1 1 200px",
-                  padding: "1rem 1.25rem",
-                  backgroundColor: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(184,151,90,0.3)",
-                  borderRight: "none",
-                  color: "var(--color-cream)",
-                  fontFamily: "var(--font-body)",
-                  fontSize: "0.875rem",
-                  letterSpacing: "0.05em",
-                  outline: "none",
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = "var(--color-gold)";
-                  e.target.style.backgroundColor = "rgba(255,255,255,0.08)";
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = "rgba(184,151,90,0.3)";
-                  e.target.style.backgroundColor = "rgba(255,255,255,0.05)";
-                }}
-              />
-              <button
-                type="submit"
-                disabled={status === "loading"}
-                style={{
-                  flex: "0 0 auto",
-                  padding: "1rem 1.75rem",
-                  backgroundColor: status === "loading" ? "var(--color-gold-muted)" : "var(--color-gold)",
-                  border: "1px solid var(--color-gold)",
-                  color: "var(--color-obsidian)",
-                  fontFamily: "var(--font-body)",
-                  fontSize: "0.75rem",
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  cursor: status === "loading" ? "wait" : "pointer",
-                  transition: "background-color 0.3s ease",
-                }}
-                onMouseEnter={(e) => {
-                  if (status !== "loading")
-                    (e.currentTarget as HTMLButtonElement).style.backgroundColor = "var(--color-gold-light)";
-                }}
-                onMouseLeave={(e) => {
-                  if (status !== "loading")
-                    (e.currentTarget as HTMLButtonElement).style.backgroundColor = "var(--color-gold)";
+                  display: "flex",
+                  gap: "0",
+                  maxWidth: "480px",
+                  margin: "0 auto",
+                  flexWrap: "wrap",
                 }}
               >
-                {status === "loading" ? "..." : "Unirse"}
-              </button>
-              {status === "error" && (
-                <p
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Tu correo"
+                  required
                   style={{
-                    width: "100%",
-                    textAlign: "center",
-                    marginTop: "0.75rem",
+                    flex: "1 1 200px",
+                    padding: "1rem 1.25rem",
+                    backgroundColor: "rgba(250,247,242,0.05)",
+                    border: "1px solid rgba(212,176,120,0.3)",
+                    borderRight: "none",
+                    color: "var(--color-cream)",
                     fontFamily: "var(--font-body)",
-                    fontSize: "0.8rem",
-                    color: "var(--color-blush)",
+                    fontSize: "0.875rem",
+                    letterSpacing: "0.05em",
+                    outline: "none",
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = "var(--color-gold)";
+                    e.target.style.backgroundColor = "rgba(250,247,242,0.08)";
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = "rgba(212,176,120,0.3)";
+                    e.target.style.backgroundColor = "rgba(250,247,242,0.05)";
+                  }}
+                />
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  style={{
+                    flex: "0 0 auto",
+                    padding: "1rem 1.75rem",
+                    backgroundColor: status === "loading" ? "var(--color-gold-muted)" : "var(--color-gold)",
+                    border: "1px solid var(--color-gold)",
+                    color: "var(--color-obsidian)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.75rem",
+                    letterSpacing: "0.2em",
+                    textTransform: "uppercase",
+                    cursor: status === "loading" ? "wait" : "pointer",
+                    transition: "background-color 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (status !== "loading")
+                      (e.currentTarget as HTMLButtonElement).style.backgroundColor = "var(--color-gold-light)";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (status !== "loading")
+                      (e.currentTarget as HTMLButtonElement).style.backgroundColor = "var(--color-gold)";
                   }}
                 >
-                  Algo salió mal. Intenta de nuevo.
-                </p>
-              )}
-            </form>
+                  {status === "loading" ? "..." : "Unirse"}
+                </button>
+                {status === "error" && (
+                  <p
+                    style={{
+                      width: "100%",
+                      textAlign: "center",
+                      marginTop: "0.75rem",
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.8rem",
+                      color: "var(--color-cream-light)",
+                    }}
+                  >
+                    Algo salió mal. Intenta de nuevo.
+                  </p>
+                )}
+              </form>
+              {/* Flying bird near email form */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.25 }}
+                transition={{ delay: 0.8, duration: 1 }}
+                style={{ position: "absolute", top: "-20px", right: "-30px" }}
+                aria-hidden="true"
+              >
+                <BirdMotif variant="flying" size={20} color="var(--color-gold)" />
+              </motion.div>
+            </div>
           )}
         </AnimatedSection>
 
@@ -929,7 +1058,7 @@ function Footer() {
           gap: "2rem",
         }}
       >
-        {/* Sitting bird */}
+        {/* Sitting bird — "pause. come back to yourself" */}
         <BirdMotif variant="sitting" size={36} color="var(--color-gold-muted)" />
 
         {/* Brand */}
@@ -1021,6 +1150,11 @@ function Footer() {
 }
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
+// TODO: Two-column editorial layout (desktop >1024px) from PDF page 10:
+//   Left column: Hero + WhatThisSpaceHolds + JoinTheFlock
+//   Right column: AboutFounder (sticky, runs alongside)
+//   Currently skipped due to complexity of nesting hero (100svh) in a grid column
+//   without breaking mobile layout. Sections are stacked for now.
 export default function Home() {
   return (
     <main>
