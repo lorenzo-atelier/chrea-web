@@ -1,6 +1,17 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy instantiation — avoid Resend constructor throwing at build time if no API key
+let _resend: Resend | null = null;
+function getResend(): Resend {
+  if (!_resend) {
+    // Resend requires a non-empty key starting with "re_" — use a dummy if not configured
+    const key = process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.includes("placeholder")
+      ? process.env.RESEND_API_KEY
+      : "re_unconfigured_key_000000000000000000";
+    _resend = new Resend(key);
+  }
+  return _resend;
+}
 
 // Welcome email HTML — matches CHRÉA brand: obsidian bg, gold accents, Cormorant Garamond
 const welcomeEmailHtml = (email: string) => `
@@ -81,7 +92,7 @@ export async function sendWelcomeEmail(email: string): Promise<{ success: boolea
   }
 
   try {
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: "CHRÉA <hola@chrea.co>",
       to: [email],
       subject: "✦ Bienvenida al flock, querida.",

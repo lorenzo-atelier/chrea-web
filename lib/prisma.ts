@@ -7,10 +7,16 @@ const globalForPrisma = globalThis as unknown as {
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
-  if (!connectionString || connectionString.includes("placeholder")) {
+  const isConfigured = connectionString && !connectionString.includes("placeholder");
+
+  if (!isConfigured) {
     console.warn("[prisma] DATABASE_URL not configured — DB operations will fail");
+    // Return a "dummy" client that fails gracefully at query time, not at build time
+    const adapter = new PrismaNeon({ connectionString: "postgresql://placeholder:placeholder@localhost:5432/chrea" });
+    return new PrismaClient({ adapter });
   }
-  const adapter = new PrismaNeon({ connectionString: connectionString ?? "" });
+
+  const adapter = new PrismaNeon({ connectionString });
   return new PrismaClient({ adapter });
 }
 
